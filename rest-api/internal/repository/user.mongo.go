@@ -25,10 +25,7 @@ func (r UserRepositoryMongo) Create(user model.User) (*model.User, *util.AppErro
 	_, err := r.DB.InsertOne(context.TODO(), user)
 
 	if err != nil {
-		return nil, &util.AppError{
-			OriginalError: err,
-			UserMessage:   err.Error(),
-		}
+		return nil, util.ParseMongoError(err)
 	}
 
 	return &user, nil
