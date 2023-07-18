@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  rest-api:
+    build: 
+      context: ./rest-api/.devcontainer
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/workspace:cached
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    ports:
+      - 3000:3000
+    networks:
+      - default
+
+  db:
+    image: mongo:latest
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=surajboniwal
+      - MONGO_INITDB_ROOT_PASSWORD=suraj1335
+      - MONGO_INITDB_DATABASE=connect
+    volumes:
+      - ./volumes/db:/data/db
+    ports:
+      - 27017:27017
+    networks:
+      - default
+
+networks:
+  default:
+    driver: "bridge"
