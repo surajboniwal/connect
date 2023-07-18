@@ -27,6 +27,7 @@ func (r UserRepositoryMongo) Create(user model.User) (*model.User, *util.AppErro
 	if err != nil {
 		return nil, &util.AppError{
 			OriginalError: err,
+			UserMessage:   err.Error(),
 		}
 	}
 

@@ -8,5 +8,5 @@ type AppError struct {
 }
 
 func (m *AppError) Error() string {
-	return m.OriginalError.Error()
+	return m.UserMessage
 }

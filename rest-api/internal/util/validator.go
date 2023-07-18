@@ -12,22 +12,20 @@ func init() {
 	validate = validator.New()
 }
 
-func ValidateParam(p any) []AppError {
+func ValidateParam(p any) *AppError {
 	err := validate.Struct(p)
 
 	if err == nil {
 		return nil
 	}
 
-	var errors []AppError
+	var appError AppError
 
 	validationErrors := err.(validator.ValidationErrors)
 
-	for _, validationError := range validationErrors {
-		errors = append(errors, parseValidationError(&validationError))
-	}
+	appError = parseValidationError(&validationErrors[0])
 
-	return errors
+	return &appError
 }
 
 func parseValidationError(err *validator.FieldError) AppError {

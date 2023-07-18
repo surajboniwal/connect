@@ -28,15 +28,25 @@ func (h AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, _ := h.userRepo.Create(model.User{
+	user, err := h.userRepo.Create(model.User{
 		Name:     params.Name,
 		Email:    params.Email,
 		Password: params.Password,
 	})
 
-	h.organizationRepo.Create(model.Organization{
+	if err != nil {
+		util.WriteJSONResponse(w, err)
+		return
+	}
+
+	_, err = h.organizationRepo.Create(model.Organization{
 		Name: params.Organization_Name,
 	})
+
+	if err != nil {
+		util.WriteJSONResponse(w, err)
+		return
+	}
 
 	util.WriteJSONResponse(w, user)
 }
