@@ -23,9 +23,9 @@ func Load() Config {
 	var config Config
 	flag.Parse()
 
-	fmt.Printf("Loading config: %v\n", fmt.Sprintf("./internal/config/%v.env", *env))
+	fmt.Printf("Loading config: %v\n", fmt.Sprintf("%v.env", *env))
 
-	if err := k.Load(file.Provider(fmt.Sprintf("./internal/config/%v.env", *env)), dotenv.Parser()); err != nil {
+	if err := k.Load(file.Provider(fmt.Sprintf("./../../internal/config/%v.env", *env)), dotenv.Parser()); err != nil {
 		log.Fatalf("error loading config: %v", err)
 	}
 

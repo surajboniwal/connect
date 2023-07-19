@@ -50,12 +50,11 @@ func ParseMongoError(err error) *AppError {
 	}
 
 	tag := splitIndex[0]
-	errorType := splitIndex[1]
 
 	return &AppError{
 		OriginalError: err,
 		Tag:           tag,
-		UserMessage:   DBErrorMap[tag][errorType],
+		UserMessage:   DBErrorMap[index],
 		Code:          400,
 	}
 }
