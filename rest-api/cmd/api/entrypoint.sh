@@ -12,7 +12,7 @@ else
 fi
 
 echo "[`date`] Running DB migrations..."
-# migrate -database "${DB_URL}" -path ./migrations up
+migrate -database "${DB_URL}" -path ../../migrations up
 
 echo "[`date`] Starting $APP_ENV server..."
 
