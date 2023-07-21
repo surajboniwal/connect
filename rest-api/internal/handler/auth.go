@@ -32,6 +32,7 @@ func (h AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 		Name:     params.Name,
 		Email:    params.Email,
 		Password: params.Password,
+		Phone:    params.Phone,
 	})
 
 	if err != nil {

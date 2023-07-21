@@ -38,11 +38,13 @@ func parseValidationError(err *validator.FieldError) AppError {
 	case "required":
 		appError.UserMessage = "Required"
 	case "email":
-		appError.UserMessage = "Invalid email address"
+		appError.UserMessage = "Pleaase enter a valid email address."
 	case "alpha":
 		appError.UserMessage = "Invalid input"
 	case "alphanum":
 		appError.UserMessage = "Invalid input"
+	case "e164":
+		appError.UserMessage = "Please enter a valid phone number."
 	default:
 		appError = AppError{
 			OriginalError: *err,

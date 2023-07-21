@@ -13,6 +13,7 @@
                     "email": 1
                 },
                 "name": "email_unique",
+                "unique": true,
                 "background": true
             },
             {
@@ -20,6 +21,7 @@
                     "phone": 1
                 },
                 "name": "phone_unique",
+                "unique": true,
                 "background": true
             }
         ]
