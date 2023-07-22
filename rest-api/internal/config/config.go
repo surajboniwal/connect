@@ -1,6 +1,8 @@
 package config
 
 import (
+	"connect-rest-api/internal/util/appenv"
+	"flag"
 	"fmt"
 	"log"
 
@@ -15,9 +17,12 @@ type Config struct {
 	APP_ENV string
 }
 
+var env = appenv.AppEnv()
+
 var k = koanf.New(".")
 
-func Load(env string) Config {
+func Load() Config {
+	flag.Parse()
 	var config Config = Config{
 		APP_ENV: env,
 	}

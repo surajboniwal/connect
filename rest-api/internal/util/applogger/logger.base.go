@@ -1,7 +1,7 @@
 package applogger
 
 import (
-	"fmt"
+	"connect-rest-api/internal/util/appenv"
 	"net/http"
 )
 
@@ -11,14 +11,9 @@ type Logger interface {
 	D(any, ...string)
 }
 
-var env string
-
-func Init(_env string) {
-	env = _env
-}
+var env = appenv.AppEnv()
 
 func New(name string) Logger {
-	fmt.Printf("%v %v\n", name, env)
 	switch env {
 	case "development":
 		return newConsoleLogger(name)

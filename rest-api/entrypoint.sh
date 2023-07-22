@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-APP_ENV=${APP_ENV:-development}
+APP_ENV=${ENV:-development}
 
 echo "[`date`] Running entrypoint script in the '${APP_ENV}' environment"
 
@@ -27,11 +27,11 @@ echo "[`date`] Starting $APP_ENV server"
 
 if [ "$APP_ENV" = "development" ]; then
     clear
-    go run ./cmd/api --env=$APP_ENV
+    ENV=$APP_ENV go run ./cmd/api
 else
     rm -rf ./main
     mkdir -p logs
     go build ./cmd/api/*
     clear
-    ./main --env=$APP_ENV > "logs/`date`_logs.txt"
+    ENV=$APP_ENV ./main > "logs/`date`_logs.txt"
 fi
