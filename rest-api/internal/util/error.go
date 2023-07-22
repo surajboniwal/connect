@@ -20,18 +20,19 @@ func (m *AppError) Error() string {
 
 var r = regexp.MustCompile(`index:\s(\S+)`)
 
-func ParseMongoError(err error) *AppError {
-	var mongoError mongo.WriteException
-
+func ParseError(err error) *AppError {
 	if e, ok := err.(mongo.WriteException); !ok {
-		return &AppError{
-			OriginalError: err,
-		}
-	} else {
-		mongoError = e
+		return parseMongoError(e)
 	}
 
-	match := r.FindStringSubmatch(mongoError.WriteErrors[0].Message)
+	return &AppError{
+		OriginalError: err,
+	}
+}
+
+func parseMongoError(err mongo.WriteException) *AppError {
+
+	match := r.FindStringSubmatch(err.WriteErrors[0].Message)
 
 	if len(match) <= 1 {
 		return &AppError{
