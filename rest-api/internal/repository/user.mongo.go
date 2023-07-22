@@ -11,12 +11,12 @@ import (
 )
 
 type UserRepositoryMongo struct {
-	DB *mongo.Collection
+	db *mongo.Collection
 }
 
 func NewUserRepositoryMongo(DB *mongo.Database) UserRepositoryMongo {
 	return UserRepositoryMongo{
-		DB: DB.Collection("users"),
+		db: DB.Collection("users"),
 	}
 }
 
@@ -31,7 +31,7 @@ func (r UserRepositoryMongo) Create(user model.User) (*model.User, *apperror.App
 		return nil, apperror.ParseError(err)
 	}
 
-	_, err = r.DB.InsertOne(context.TODO(), user)
+	_, err = r.db.InsertOne(context.TODO(), user)
 
 	if err != nil {
 		return nil, apperror.ParseError(err)

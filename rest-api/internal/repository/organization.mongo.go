@@ -10,12 +10,12 @@ import (
 )
 
 type OrganizationRepositoryMongo struct {
-	DB *mongo.Collection
+	db *mongo.Collection
 }
 
 func NewOrganizationRepositoryMongo(db *mongo.Database) OrganizationRepositoryMongo {
 	return OrganizationRepositoryMongo{
-		DB: db.Collection("organizations"),
+		db: db.Collection("organizations"),
 	}
 }
 
@@ -23,7 +23,7 @@ func (r OrganizationRepositoryMongo) Create(organization model.Organization) (*m
 
 	organization.Id = primitive.NewObjectID()
 
-	_, err := r.DB.InsertOne(context.TODO(), organization)
+	_, err := r.db.InsertOne(context.TODO(), organization)
 
 	if err != nil {
 		return nil, &apperror.AppError{

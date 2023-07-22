@@ -1,7 +1,6 @@
 package config
 
 import (
-	"flag"
 	"fmt"
 	"log"
 
@@ -11,19 +10,19 @@ import (
 )
 
 type Config struct {
-	PORT   string `koanf:"PORT"`
-	DB_URL string `koanf:"DB_URL"`
+	PORT    string `koanf:"PORT"`
+	DB_URL  string `koanf:"DB_URL"`
+	APP_ENV string
 }
 
 var k = koanf.New(".")
 
-var env *string = flag.String("env", "development", "App environment - |development|production|")
+func Load(env string) Config {
+	var config Config = Config{
+		APP_ENV: env,
+	}
 
-func Load() Config {
-	var config Config
-	flag.Parse()
-
-	if err := k.Load(file.Provider(fmt.Sprintf("./internal/config/%v.env", *env)), dotenv.Parser()); err != nil {
+	if err := k.Load(file.Provider(fmt.Sprintf("./internal/config/%v.env", env)), dotenv.Parser()); err != nil {
 		log.Fatalf("error loading config: %v", err)
 	}
 

@@ -6,16 +6,27 @@ import (
 	"connect-rest-api/internal/handler"
 	"connect-rest-api/internal/repository"
 	"connect-rest-api/internal/router"
+	"connect-rest-api/internal/util/applogger"
+	"flag"
 	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
 )
 
+var env *string = flag.String("env", "development", "App environment - |development|production|")
+
 func main() {
-	config := config.Load()
+
+	flag.Parse()
+
+	config := config.Load(*env)
 	db := database.Connect(&config)
 	r := chi.NewRouter()
+	fmt.Println(*env)
+	applogger.Init(*env)
+
+	r.Use(applogger.AppLoggerMiddleware)
 
 	organizationRepo := repository.NewOrganizationRepositoryMongo(&db)
 	userRepo := repository.NewUserRepositoryMongo(&db)
