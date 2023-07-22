@@ -30,7 +30,7 @@ func (database *PgDatabase) Connect() {
 		logger.E(err)
 	}
 
-	logger.I("Connect to postgres")
+	logger.I("Connected to postgres")
 
 	database.DB = db
 }
