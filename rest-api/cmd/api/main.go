@@ -7,6 +7,7 @@ import (
 	"connect-rest-api/internal/repository"
 	"connect-rest-api/internal/router"
 	"connect-rest-api/internal/util/applogger"
+	"connect-rest-api/internal/util/idgen"
 	"fmt"
 	"net/http"
 
@@ -14,15 +15,19 @@ import (
 )
 
 func main() {
-
 	config := config.Load()
-	db := database.Connect(&config)
+
+	database := database.NewPgDatabase(&config)
+	database.Connect()
+
 	r := chi.NewRouter()
 
 	r.Use(applogger.AppLoggerMiddleware)
 
-	organizationRepo := repository.NewOrganizationRepositoryMongo(&db)
-	userRepo := repository.NewUserRepositoryMongo(&db)
+	idGen := idgen.NewSnowflakeIdGen()
+
+	organizationRepo := repository.NewOrganizationRepositoryPg(database.DB, idGen)
+	userRepo := repository.NewUserRepositoryPg(database.DB, idGen)
 
 	organizationHandler := handler.NewOrganizationHandler(&organizationRepo)
 	userHandler := handler.NewUserHandler(&userRepo)
