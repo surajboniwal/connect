@@ -19,7 +19,7 @@ func (m *AppError) Error() string {
 	return m.UserMessage
 }
 
-func ParseError(err error) *AppError {
+func Parse(err error) *AppError {
 	logger.E(err)
 	if e, ok := err.(*pq.Error); ok {
 		return parsePgError(e)

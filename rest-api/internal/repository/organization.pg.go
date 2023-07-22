@@ -20,17 +20,17 @@ func NewOrganizationRepositoryPg(db *sqlx.DB, idGen idgen.IdGen) OrganizationRep
 	}
 }
 
-func (r OrganizationRepositoryPg) Create(organization model.Organization) (*model.Organization, *apperror.AppError) {
+func (r OrganizationRepositoryPg) Create(organization *model.Organization) *apperror.AppError {
 
 	organization.Id = r.idgen.New()
 
 	_, err := r.db.Exec("INSERT into organizations (id, name) VALUES ($1, $2)", organization.Id, organization.Name)
 
 	if err != nil {
-		return nil, &apperror.AppError{
+		return &apperror.AppError{
 			OriginalError: err,
 		}
 	}
 
-	return &organization, nil
+	return nil
 }

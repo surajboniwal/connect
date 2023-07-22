@@ -28,10 +28,11 @@ func main() {
 
 	organizationRepo := repository.NewOrganizationRepositoryPg(database.DB, idGen)
 	userRepo := repository.NewUserRepositoryPg(database.DB, idGen)
+	organizationUsersRepo := repository.NewOrganizationUsersRepositoryPg(database.DB)
 
 	organizationHandler := handler.NewOrganizationHandler(&organizationRepo)
 	userHandler := handler.NewUserHandler(&userRepo)
-	authHandler := handler.NewAuthHandler(&userRepo, &organizationRepo)
+	authHandler := handler.NewAuthHandler(&userRepo, &organizationRepo, &organizationUsersRepo)
 
 	router.OrganizationRoutes(r, &organizationHandler)
 	router.UserRoutes(r, &userHandler)

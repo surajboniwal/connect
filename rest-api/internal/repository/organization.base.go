@@ -6,5 +6,5 @@ import (
 )
 
 type OrganizationRepository interface {
-	Create(model.Organization) (*model.Organization, *apperror.AppError)
+	Create(*model.Organization) *apperror.AppError
 }

@@ -1,5 +1,7 @@
-DROP INDEX "email_unique";
-DROP INDEX "phone_unique";
+DROP INDEX IF EXISTS "email_unique";
+DROP INDEX IF EXISTS "phone_unique";
+DROP INDEX IF EXISTS "organization_user_unique";
 
-DROP TABLE "users";
-DROP TABLE "organizations";
+DROP TABLE IF EXISTS "organization_users";
+DROP TABLE IF EXISTS "users";
+DROP TABLE IF EXISTS "organizations";

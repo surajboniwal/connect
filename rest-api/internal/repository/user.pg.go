@@ -21,7 +21,7 @@ func NewUserRepositoryPg(DB *sqlx.DB, idgen idgen.IdGen) UserRepositoryPg {
 	}
 }
 
-func (r UserRepositoryPg) Create(user model.User) (*model.User, *apperror.AppError) {
+func (r UserRepositoryPg) Create(user *model.User) *apperror.AppError {
 	user.Id = r.idgen.New()
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
@@ -29,14 +29,14 @@ func (r UserRepositoryPg) Create(user model.User) (*model.User, *apperror.AppErr
 	user.Password = string(hashedPassword)
 
 	if err != nil {
-		return nil, apperror.ParseError(err)
+		return apperror.Parse(err)
 	}
 
 	_, err = r.db.Exec("INSERT INTO users (id, name, email, password, phone) VALUES($1, $2, $3, $4, $5)", user.Id, user.Name, user.Email, user.Password, user.Phone)
 
 	if err != nil {
-		return nil, apperror.ParseError(err)
+		return apperror.Parse(err)
 	}
 
-	return &user, nil
+	return nil
 }
