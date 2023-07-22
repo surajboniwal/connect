@@ -1,14 +1,15 @@
-package util
+package apphttp
 
 import (
+	"connect-rest-api/internal/util/apperror"
 	"encoding/json"
 	"net/http"
 )
 
 type response struct {
-	Status bool      `json:"status"`
-	Error  *AppError `json:"error,omitempty"`
-	Data   any       `json:"data,omitempty"`
+	Status bool               `json:"status"`
+	Error  *apperror.AppError `json:"error,omitempty"`
+	Data   any                `json:"data,omitempty"`
 }
 
 func WriteJSONResponse(w http.ResponseWriter, data interface{}, params ...int) {
@@ -16,9 +17,9 @@ func WriteJSONResponse(w http.ResponseWriter, data interface{}, params ...int) {
 
 	res := response{}
 
-	if _, ok := data.(*AppError); ok {
+	if _, ok := data.(*apperror.AppError); ok {
 
-		err := data.(*AppError)
+		err := data.(*apperror.AppError)
 
 		if err.Tag == "" {
 			err.Tag = "global"

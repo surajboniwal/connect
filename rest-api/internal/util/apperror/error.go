@@ -1,4 +1,4 @@
-package util
+package apperror
 
 import (
 	"regexp"

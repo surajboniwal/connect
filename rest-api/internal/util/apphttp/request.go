@@ -1,16 +1,17 @@
-package util
+package apphttp
 
 import (
+	"connect-rest-api/internal/util/apperror"
 	"encoding/json"
 	"io"
 	"net/http"
 )
 
-func ParseRequestBody(r *http.Request, data interface{}) *AppError {
+func ParseRequestBody(r *http.Request, data interface{}) *apperror.AppError {
 	body, err := io.ReadAll(r.Body)
 
 	if err != nil {
-		return &AppError{
+		return &apperror.AppError{
 			OriginalError: err,
 			Tag:           "global",
 			UserMessage:   "Error while parsing",
@@ -19,7 +20,7 @@ func ParseRequestBody(r *http.Request, data interface{}) *AppError {
 	}
 
 	if err := r.Body.Close(); err != nil {
-		return &AppError{
+		return &apperror.AppError{
 			OriginalError: err,
 			Tag:           "global",
 			UserMessage:   "Something went wrong",
@@ -28,7 +29,7 @@ func ParseRequestBody(r *http.Request, data interface{}) *AppError {
 	}
 
 	if err := json.Unmarshal(body, data); err != nil {
-		return &AppError{
+		return &apperror.AppError{
 			OriginalError: err,
 			Tag:           "global",
 			UserMessage:   "Error while parsing",

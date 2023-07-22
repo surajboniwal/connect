@@ -2,9 +2,9 @@ package repository
 
 import (
 	"connect-rest-api/internal/model"
-	"connect-rest-api/internal/util"
+	"connect-rest-api/internal/util/apperror"
 )
 
 type UserRepository interface {
-	Create(model.User) (*model.User, *util.AppError)
+	Create(model.User) (*model.User, *apperror.AppError)
 }

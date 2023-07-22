@@ -1,6 +1,7 @@
-package util
+package apphttp
 
 import (
+	"connect-rest-api/internal/util/apperror"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
@@ -12,14 +13,14 @@ func init() {
 	validate = validator.New()
 }
 
-func ValidateParam(p any) *AppError {
+func ValidateParam(p any) *apperror.AppError {
 	err := validate.Struct(p)
 
 	if err == nil {
 		return nil
 	}
 
-	var appError AppError
+	var appError apperror.AppError
 
 	validationErrors := err.(validator.ValidationErrors)
 
@@ -28,8 +29,8 @@ func ValidateParam(p any) *AppError {
 	return &appError
 }
 
-func parseValidationError(err *validator.FieldError) AppError {
-	var appError AppError = AppError{
+func parseValidationError(err *validator.FieldError) apperror.AppError {
+	var appError apperror.AppError = apperror.AppError{
 		OriginalError: *err,
 		Tag:           strings.ToLower((*err).Field()),
 		Code:          400,
@@ -46,7 +47,7 @@ func parseValidationError(err *validator.FieldError) AppError {
 	case "e164":
 		appError.UserMessage = "Please enter a valid phone number."
 	default:
-		appError = AppError{
+		appError = apperror.AppError{
 			OriginalError: *err,
 			Tag:           "global",
 			UserMessage:   "Something went wrong",

@@ -4,7 +4,7 @@ import (
 	"connect-rest-api/internal/model"
 	"connect-rest-api/internal/params"
 	"connect-rest-api/internal/repository"
-	"connect-rest-api/internal/util"
+	"connect-rest-api/internal/util/apphttp"
 	"net/http"
 )
 
@@ -23,8 +23,8 @@ func NewAuthHandler(userRepo repository.UserRepository, organizationRepository r
 func (h AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 	var params params.Register
 
-	if err := util.ParseRequestBody(r, &params); err != nil {
-		util.WriteJSONResponse(w, err)
+	if err := apphttp.ParseRequestBody(r, &params); err != nil {
+		apphttp.WriteJSONResponse(w, err)
 		return
 	}
 
@@ -36,7 +36,7 @@ func (h AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 	})
 
 	if err != nil {
-		util.WriteJSONResponse(w, err)
+		apphttp.WriteJSONResponse(w, err)
 		return
 	}
 
@@ -45,9 +45,9 @@ func (h AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 	})
 
 	if err != nil {
-		util.WriteJSONResponse(w, err)
+		apphttp.WriteJSONResponse(w, err)
 		return
 	}
 
-	util.WriteJSONResponse(w, user)
+	apphttp.WriteJSONResponse(w, user)
 }

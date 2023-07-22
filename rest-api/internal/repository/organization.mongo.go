@@ -2,7 +2,7 @@ package repository
 
 import (
 	"connect-rest-api/internal/model"
-	"connect-rest-api/internal/util"
+	"connect-rest-api/internal/util/apperror"
 	"context"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -19,14 +19,14 @@ func NewOrganizationRepositoryMongo(db *mongo.Database) OrganizationRepositoryMo
 	}
 }
 
-func (r OrganizationRepositoryMongo) Create(organization model.Organization) (*model.Organization, *util.AppError) {
+func (r OrganizationRepositoryMongo) Create(organization model.Organization) (*model.Organization, *apperror.AppError) {
 
 	organization.Id = primitive.NewObjectID()
 
 	_, err := r.DB.InsertOne(context.TODO(), organization)
 
 	if err != nil {
-		return nil, &util.AppError{
+		return nil, &apperror.AppError{
 			OriginalError: err,
 		}
 	}
