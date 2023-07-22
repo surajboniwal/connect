@@ -6,9 +6,9 @@ import (
 )
 
 type Logger interface {
-	I(any, ...string)
-	E(any, ...string)
-	D(any, ...string)
+	I(any, ...any)
+	E(any, ...any)
+	D(any, ...any)
 }
 
 var env = appenv.AppEnv()
