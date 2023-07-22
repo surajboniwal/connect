@@ -1,11 +1,12 @@
 package apperror
 
 import (
-	"regexp"
-	"strings"
+	"connect-rest-api/internal/util/applogger"
 
-	"go.mongodb.org/mongo-driver/mongo"
+	"github.com/lib/pq"
 )
+
+var logger = applogger.New("apperror")
 
 type AppError struct {
 	OriginalError error  `json:"-"`
@@ -18,11 +19,10 @@ func (m *AppError) Error() string {
 	return m.UserMessage
 }
 
-var r = regexp.MustCompile(`index:\s(\S+)`)
-
 func ParseError(err error) *AppError {
-	if e, ok := err.(mongo.WriteException); !ok {
-		return parseMongoError(e)
+	logger.E(err)
+	if e, ok := err.(*pq.Error); ok {
+		return parsePgError(e)
 	}
 
 	return &AppError{
@@ -30,32 +30,12 @@ func ParseError(err error) *AppError {
 	}
 }
 
-func parseMongoError(err mongo.WriteException) *AppError {
-
-	match := r.FindStringSubmatch(err.WriteErrors[0].Message)
-
-	if len(match) <= 1 {
-		return &AppError{
-			OriginalError: err,
-		}
-	}
-
-	index := match[1]
-
-	splitIndex := strings.Split(index, "_")
-
-	if len(splitIndex) < 2 {
-		return &AppError{
-			OriginalError: err,
-		}
-	}
-
-	tag := splitIndex[0]
+func parsePgError(err *pq.Error) *AppError {
 
 	return &AppError{
 		OriginalError: err,
-		Tag:           tag,
-		UserMessage:   DBErrorMap[index],
+		Tag:           err.Column,
+		UserMessage:   DBErrorMap[err.Constraint],
 		Code:          400,
 	}
 }

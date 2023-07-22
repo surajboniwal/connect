@@ -21,7 +21,8 @@ echo "[`date`] Sourcing $ENV_PATH"
 source $ENV_PATH
 
 echo "[`date`] Running DB migrations"
-migrate -database "${DB_URL}" -path migrations up > /dev/null 2>&1
+mkdir -p logs/migration
+migrate -database "${DB_URL}" -path ./migrations up > "logs/migration/`date`_logs.txt" 2>&1
 
 echo "[`date`] Starting $APP_ENV server"
 
@@ -30,8 +31,8 @@ if [ "$APP_ENV" = "development" ]; then
     ENV=$APP_ENV go run ./cmd/api
 else
     rm -rf ./main
-    mkdir -p logs
+    mkdir -p logs/app
     go build ./cmd/api/*
     clear
-    ENV=$APP_ENV ./main > "logs/`date`_logs.txt"
+    ENV=$APP_ENV ./main > "logs/app/`date`_logs.txt" 2>&1
 fi

@@ -1,8 +1,6 @@
 package model
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
-
 type Organization struct {
-	Id   primitive.ObjectID `bson:"_id" json:"id"`
-	Name string             `bson:"name" json:"name"`
+	Id   int64  `json:"id"`
+	Name string `json:"name"`
 }

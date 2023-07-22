@@ -14,16 +14,15 @@ services:
       - default
 
   db:
-    image: mongo:latest
-    restart: always
+    image: postgres:latest
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=surajboniwal
-      - MONGO_INITDB_ROOT_PASSWORD=suraj1335
-      - MONGO_INITDB_DATABASE=connect
+      - POSTGRES_USER=surajboniwal
+      - POSTGRES_PASSWORD=suraj1335
+      - POSTGRES_DB=connect
     volumes:
-      - ./volumes/db:/data/db
+      - ./volumes/db:/var/lib/postgresql/data
     ports:
-      - 27017:27017
+      - 5432:5432
     networks:
       - default
 
