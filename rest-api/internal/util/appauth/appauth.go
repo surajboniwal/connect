@@ -2,6 +2,7 @@ package appauth
 
 import (
 	"connect-rest-api/internal/util/apperror"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -23,7 +24,7 @@ func Generate(userid int64) (string, *apperror.AppError) {
 	jsonToken := paseto.JSONToken{
 		Issuer:     "connect-rest-api",
 		IssuedAt:   now,
-		Subject:    string(userid),
+		Subject:    fmt.Sprintf("%v", userid),
 		Expiration: exp,
 		NotBefore:  nbt,
 	}
