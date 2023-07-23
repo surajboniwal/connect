@@ -6,6 +6,7 @@ import (
 	"connect-rest-api/internal/handler"
 	"connect-rest-api/internal/repository"
 	"connect-rest-api/internal/router"
+	"connect-rest-api/internal/util/appauth"
 	"connect-rest-api/internal/util/applogger"
 	"connect-rest-api/internal/util/idgen"
 	"fmt"
@@ -16,6 +17,8 @@ import (
 
 func main() {
 	config := config.Load()
+
+	appauth.Init(config.AUTH_SECRET)
 
 	database := database.NewPgDatabase(&config)
 	database.Connect()

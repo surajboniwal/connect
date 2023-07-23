@@ -12,9 +12,10 @@ import (
 )
 
 type Config struct {
-	PORT    string `koanf:"PORT"`
-	DB_URL  string `koanf:"DB_URL"`
-	APP_ENV string
+	PORT        string `koanf:"PORT"`
+	DB_URL      string `koanf:"DB_URL"`
+	APP_ENV     string
+	AUTH_SECRET string `koanf:"AUTH_SECRET"`
 }
 
 var env = appenv.AppEnv()
