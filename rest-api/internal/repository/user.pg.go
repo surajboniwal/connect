@@ -6,7 +6,6 @@ import (
 	"connect-rest-api/internal/util/idgen"
 
 	"github.com/jmoiron/sqlx"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type UserRepositoryPg struct {
@@ -24,9 +23,7 @@ func NewUserRepositoryPg(DB *sqlx.DB, idgen idgen.IdGen) UserRepositoryPg {
 func (r UserRepositoryPg) Create(user *model.User) *apperror.AppError {
 	user.Id = r.idgen.New()
 
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
-
-	user.Password = string(hashedPassword)
+	err := user.HashPassword()
 
 	if err != nil {
 		return apperror.Parse(err)

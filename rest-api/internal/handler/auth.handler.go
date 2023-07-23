@@ -9,23 +9,19 @@ import (
 )
 
 type AuthHandler struct {
-	userRepo              repository.UserRepository
-	organizationRepo      repository.OrganizationRepository
-	organizationUsersRepo repository.OrganizationUsersRepository
+	authRepo repository.AuthRepository
 }
 
-func NewAuthHandler(userRepo repository.UserRepository, organizationRepo repository.OrganizationRepository, organizationUsersRepo repository.OrganizationUsersRepository) AuthHandler {
+func NewAuthHandler(authRepo repository.AuthRepository) AuthHandler {
 	return AuthHandler{
-		userRepo:              userRepo,
-		organizationRepo:      organizationRepo,
-		organizationUsersRepo: organizationUsersRepo,
+		authRepo: authRepo,
 	}
 }
 
 func (h AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 	var params params.Register
 
-	if err := apphttp.ParseRequestBody(r, &params); err != nil {
+	if err := apphttp.ParseAndValidate(r, &params); err != nil {
 		apphttp.WriteJSONResponse(w, err)
 		return
 	}
@@ -41,21 +37,7 @@ func (h AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 		Name: params.Organization_Name,
 	}
 
-	err := h.userRepo.Create(user)
-
-	if err != nil {
-		apphttp.WriteJSONResponse(w, err)
-		return
-	}
-
-	err = h.organizationRepo.Create(organization)
-
-	if err != nil {
-		apphttp.WriteJSONResponse(w, err)
-		return
-	}
-
-	err = h.organizationUsersRepo.AddUser(organization.Id, user.Id)
+	err := h.authRepo.Register(user, organization)
 
 	if err != nil {
 		apphttp.WriteJSONResponse(w, err)

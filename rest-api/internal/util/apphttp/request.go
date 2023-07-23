@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func ParseRequestBody(r *http.Request, data interface{}) *apperror.AppError {
+func ParseAndValidate(r *http.Request, data interface{}) *apperror.AppError {
 	body, err := io.ReadAll(r.Body)
 
 	if err != nil {
