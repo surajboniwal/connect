@@ -2,7 +2,6 @@ package appauth
 
 import (
 	"connect-rest-api/internal/util/apperror"
-	"fmt"
 	"strconv"
 	"time"
 
@@ -24,11 +23,10 @@ func Generate(userid int64) (string, *apperror.AppError) {
 	jsonToken := paseto.JSONToken{
 		Issuer:     "connect-rest-api",
 		IssuedAt:   now,
+		Subject:    string(userid),
 		Expiration: exp,
 		NotBefore:  nbt,
 	}
-
-	jsonToken.Set("user_id", fmt.Sprintf("%v", userid))
 
 	token, err := t.Encrypt([]byte(secretKey), jsonToken, nil)
 
@@ -48,7 +46,7 @@ func Validate(token string) (int64, *apperror.AppError) {
 		return 0, apperror.Parse(err)
 	}
 
-	i, err := strconv.ParseInt(newJsonToken.Get("user_id"), 10, 64)
+	i, err := strconv.ParseInt(newJsonToken.Subject, 10, 64)
 	if err != nil {
 		return 0, apperror.Parse(err)
 	}
