@@ -1,11 +1,11 @@
 -- Drop foreign keys
-ALTER TABLE "organizations" DROP CONSTRAINT "organizations_id_fkey";
-ALTER TABLE "organization_users" DROP CONSTRAINT "organization_users_organization_id_fkey";
-ALTER TABLE "organization_users" DROP CONSTRAINT "organization_users_user_id_fkey";
-ALTER TABLE "organization_channels" DROP CONSTRAINT "organization_channels_organization_id_fkey";
-ALTER TABLE "organization_channels" DROP CONSTRAINT "organization_channels_channel_id_fkey";
-ALTER TABLE "customer_channels" DROP CONSTRAINT "customer_channels_channel_id_fkey";
-ALTER TABLE "customer_channels" DROP CONSTRAINT "customer_channels_customer_id_fkey";
+ALTER TABLE "organizations" DROP CONSTRAINT IF EXISTS "organizations_id_fkey";
+ALTER TABLE "organization_users" DROP CONSTRAINT IF EXISTS "organization_users_organization_id_fkey";
+ALTER TABLE "organization_users" DROP CONSTRAINT IF EXISTS "organization_users_user_id_fkey";
+ALTER TABLE "organization_channels" DROP CONSTRAINT IF EXISTS "organization_channels_organization_id_fkey";
+ALTER TABLE "organization_channels" DROP CONSTRAINT IF EXISTS "organization_channels_channel_id_fkey";
+ALTER TABLE "customer_channels" DROP CONSTRAINT IF EXISTS "customer_channels_channel_id_fkey";
+ALTER TABLE "customer_channels" DROP CONSTRAINT IF EXISTS "customer_channels_customer_id_fkey";
 
 -- Drop triggers
 DROP TRIGGER IF EXISTS trigger_update_timestamp ON "users";

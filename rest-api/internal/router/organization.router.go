@@ -8,5 +8,6 @@ import (
 
 func OrganizationRoutes(r *chi.Mux, organizationHandler *handler.OrganizationHandler) {
 	r.Route("/organization", func(router chi.Router) {
+		router.Post("/", organizationHandler.Create)
 	})
 }

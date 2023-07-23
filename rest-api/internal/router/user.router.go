@@ -8,5 +8,6 @@ import (
 
 func UserRoutes(r *chi.Mux, userHandler *handler.UserHandler) {
 	r.Route("/user", func(router chi.Router) {
+		router.Post("/", userHandler.Create)
 	})
 }
