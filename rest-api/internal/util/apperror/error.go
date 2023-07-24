@@ -15,10 +15,6 @@ type AppError struct {
 	Code          int    `json:"-"`
 }
 
-func (m *AppError) Error() string {
-	return m.UserMessage
-}
-
 func Parse(err error) *AppError {
 	logger.E(err)
 	if e, ok := err.(*pq.Error); ok {

@@ -38,9 +38,9 @@ func main() {
 	userHandler := handler.NewUserHandler(&userRepo)
 	authHandler := handler.NewAuthHandler(&authRepo)
 
+	router.AuthRoutes(r, &authHandler)
 	router.OrganizationRoutes(r, &organizationHandler)
 	router.UserRoutes(r, &userHandler)
-	router.AuthRoutes(r, &authHandler)
 
 	http.ListenAndServe(fmt.Sprintf(":%v", config.PORT), r)
 }

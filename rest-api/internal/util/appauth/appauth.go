@@ -2,8 +2,11 @@ package appauth
 
 import (
 	"connect-rest-api/internal/util/apperror"
+	"connect-rest-api/internal/util/apphttp"
 	"fmt"
+	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/o1egl/paseto"
@@ -53,4 +56,31 @@ func Validate(token string) (int64, *apperror.AppError) {
 	}
 
 	return i, nil
+}
+func AuthMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		authHeader := r.Header.Get("Authorization")
+
+		if !strings.HasPrefix(authHeader, "Bearer ") {
+			apphttp.WriteJSONResponse(w, &apperror.AppError{
+				UserMessage: "Unauthorized",
+				Code:        http.StatusUnauthorized,
+			})
+			return
+		}
+
+		token := strings.TrimPrefix(authHeader, "Bearer ")
+
+		_, err := Validate(token)
+
+		if err != nil {
+			apphttp.WriteJSONResponse(w, &apperror.AppError{
+				UserMessage: "Unauthorized",
+				Code:        http.StatusUnauthorized,
+			})
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
 }
