@@ -34,3 +34,17 @@ func (r OrganizationRepositoryPg) Create(organization *model.Organization) *appe
 
 	return nil
 }
+
+func (r OrganizationRepositoryPg) GetOrganizationsUsingUserId(userId int64) (*[]model.Organization, *apperror.AppError) {
+
+	var organizations = make([]model.Organization, 0)
+
+	err := r.db.Select(&organizations, "SELECT o.* FROM organizations o JOIN organization_users ou ON o.id = ou.organization_id WHERE ou.user_id = $1;", userId)
+
+	if err != nil {
+		return &organizations, apperror.Parse(err)
+	}
+
+	return &organizations, nil
+
+}

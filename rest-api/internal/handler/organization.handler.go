@@ -4,6 +4,7 @@ import (
 	"connect-rest-api/internal/model"
 	"connect-rest-api/internal/params"
 	"connect-rest-api/internal/repository"
+	"connect-rest-api/internal/util/appauth"
 	"connect-rest-api/internal/util/apphttp"
 	"net/http"
 )
@@ -23,6 +24,8 @@ func NewOrganizationHandler(organizationRepo repository.OrganizationRepository, 
 func (h OrganizationHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var params params.CreateOrganization
 
+	userId := appauth.GetUserIdFromContext(r)
+
 	if err := apphttp.ParseAndValidate(r, &params); err != nil {
 		apphttp.WriteJSONResponse(w, err)
 		return
@@ -39,7 +42,7 @@ func (h OrganizationHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.organizationUsersRepo.AddUser(organization.Id, params.User_Id)
+	err = h.organizationUsersRepo.AddUser(organization.Id, *userId)
 
 	if err != nil {
 		apphttp.WriteJSONResponse(w, err)
@@ -47,4 +50,17 @@ func (h OrganizationHandler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	apphttp.WriteJSONResponse(w, organization)
+}
+
+func (h OrganizationHandler) Get(w http.ResponseWriter, r *http.Request) {
+	userId := *appauth.GetUserIdFromContext(r)
+
+	organizations, err := h.organizationRepo.GetOrganizationsUsingUserId(userId)
+
+	if err != nil {
+		apphttp.WriteJSONResponse(w, err)
+		return
+	}
+
+	apphttp.WriteJSONResponse(w, organizations)
 }

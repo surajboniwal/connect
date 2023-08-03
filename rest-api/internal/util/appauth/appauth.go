@@ -3,6 +3,7 @@ package appauth
 import (
 	"connect-rest-api/internal/util/apperror"
 	"connect-rest-api/internal/util/apphttp"
+	"context"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -57,6 +58,23 @@ func Validate(token string) (int64, *apperror.AppError) {
 
 	return i, nil
 }
+
+type ContextKey string
+
+const userIdKey ContextKey = "user_id"
+
+func GetUserIdFromContext(r *http.Request) *int64 {
+	userId := r.Context().Value(userIdKey)
+
+	if userId == nil {
+		return nil
+	}
+
+	userIdInt64 := userId.(int64)
+
+	return &userIdInt64
+}
+
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")
@@ -71,7 +89,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 
 		token := strings.TrimPrefix(authHeader, "Bearer ")
 
-		_, err := Validate(token)
+		userId, err := Validate(token)
 
 		if err != nil {
 			apphttp.WriteJSONResponse(w, &apperror.AppError{
@@ -81,6 +99,8 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		next.ServeHTTP(w, r)
+		ctx := context.WithValue(r.Context(), userIdKey, userId)
+
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

@@ -11,5 +11,6 @@ func OrganizationRoutes(r *chi.Mux, organizationHandler *handler.OrganizationHan
 	r.Route("/organization", func(router chi.Router) {
 		router.Use(appauth.AuthMiddleware)
 		router.Post("/", organizationHandler.Create)
+		router.Get("/", organizationHandler.Get)
 	})
 }

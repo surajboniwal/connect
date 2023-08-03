@@ -7,4 +7,5 @@ import (
 
 type OrganizationRepository interface {
 	Create(*model.Organization) *apperror.AppError
+	GetOrganizationsUsingUserId(int64) (*[]model.Organization, *apperror.AppError)
 }
