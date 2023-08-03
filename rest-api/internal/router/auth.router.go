@@ -8,5 +8,7 @@ import (
 
 func AuthRoutes(r *chi.Mux, authHandler *handler.AuthHandler) {
 	r.Route("/auth", func(router chi.Router) {
+		router.Post("/login", authHandler.Login)
+		router.Post("/register", authHandler.Register)
 	})
 }

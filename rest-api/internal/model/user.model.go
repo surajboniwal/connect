@@ -1,15 +1,19 @@
 package model
 
 import (
+	"time"
+
 	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
-	Id       int64  `json:"id"`
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Password string `json:"-"`
-	Phone    string `json:"phone"`
+	Id         int64     `json:"id"`
+	Name       string    `json:"name"`
+	Email      string    `json:"email"`
+	Password   string    `json:"-"`
+	Phone      string    `json:"phone"`
+	Created_At time.Time `json:"created_at"`
+	Updated_At time.Time `json:"-"`
 }
 
 func (u *User) HashPassword() error {

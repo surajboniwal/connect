@@ -32,15 +32,14 @@ func main() {
 	organizationRepo := repository.NewOrganizationRepositoryPg(database.DB, idGen)
 	userRepo := repository.NewUserRepositoryPg(database.DB, idGen)
 	organizationUsersRepo := repository.NewOrganizationUsersRepositoryPg(database.DB)
-	authRepo := repository.NewAuthRepositoryPg(database.DB, idGen)
 
 	organizationHandler := handler.NewOrganizationHandler(&organizationRepo, &organizationUsersRepo)
 	userHandler := handler.NewUserHandler(&userRepo)
-	authHandler := handler.NewAuthHandler(&authRepo)
+	authHandler := handler.NewAuthHandler(&userRepo)
 
 	router.AuthRoutes(r, &authHandler)
-	router.OrganizationRoutes(r, &organizationHandler)
 	router.UserRoutes(r, &userHandler)
+	router.OrganizationRoutes(r, &organizationHandler)
 
 	http.ListenAndServe(fmt.Sprintf(":%v", config.PORT), r)
 }

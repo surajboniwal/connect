@@ -4,7 +4,6 @@ import (
 	"connect-rest-api/internal/model"
 	"connect-rest-api/internal/params"
 	"connect-rest-api/internal/repository"
-	"connect-rest-api/internal/util/appauth"
 	"connect-rest-api/internal/util/apphttp"
 	"net/http"
 )
@@ -41,14 +40,5 @@ func (h UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := appauth.Generate(user.Id)
-
-	if err != nil {
-		apphttp.WriteJSONResponse(w, err)
-		return
-	}
-
-	apphttp.WriteJSONResponse(w, map[string]string{
-		"token": token,
-	})
+	apphttp.WriteJSONResponse(w, user, 201)
 }

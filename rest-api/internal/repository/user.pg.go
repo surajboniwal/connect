@@ -37,3 +37,14 @@ func (r UserRepositoryPg) Create(user *model.User) *apperror.AppError {
 
 	return nil
 }
+
+func (r UserRepositoryPg) GetByEmail(email string) (*model.User, *apperror.AppError) {
+
+	var user model.User
+
+	if err := r.db.QueryRowx("SELECT * from users WHERE email=$1;", email).StructScan(&user); err != nil {
+		return nil, apperror.Parse(err)
+	}
+
+	return &user, nil
+}
