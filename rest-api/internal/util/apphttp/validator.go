@@ -31,9 +31,8 @@ func ValidateParam(p any) *apperror.AppError {
 
 func parseValidationError(err *validator.FieldError) apperror.AppError {
 	var appError apperror.AppError = apperror.AppError{
-		OriginalError: *err,
-		Tag:           strings.ToLower((*err).Field()),
-		Code:          400,
+		Tag:  strings.ToLower((*err).Field()),
+		Code: 400,
 	}
 	switch (*err).Tag() {
 	case "required":
@@ -47,11 +46,7 @@ func parseValidationError(err *validator.FieldError) apperror.AppError {
 	case "e164":
 		appError.UserMessage = "Please enter a valid phone number."
 	default:
-		appError = apperror.AppError{
-			OriginalError: *err,
-			Tag:           "global",
-			UserMessage:   "Something went wrong",
-		}
+		appError = apperror.ServerError
 	}
 
 	return appError

@@ -9,10 +9,21 @@ import (
 var logger = applogger.New("apperror")
 
 type AppError struct {
-	OriginalError error  `json:"-"`
-	Tag           string `json:"tag"`
-	UserMessage   string `json:"message"`
-	Code          int    `json:"-"`
+	Tag         string `json:"tag"`
+	UserMessage string `json:"message"`
+	Code        int    `json:"-"`
+}
+
+var UnauthorizedError AppError = AppError{
+	Tag:         "global",
+	UserMessage: "Unauthorized",
+	Code:        401,
+}
+
+var ServerError AppError = AppError{
+	Tag:         "global",
+	UserMessage: "Something went wrong",
+	Code:        500,
 }
 
 func Parse(err error) *AppError {
@@ -21,17 +32,14 @@ func Parse(err error) *AppError {
 		return parsePgError(e)
 	}
 
-	return &AppError{
-		OriginalError: err,
-	}
+	return &ServerError
 }
 
 func parsePgError(err *pq.Error) *AppError {
 
 	return &AppError{
-		OriginalError: err,
-		Tag:           err.Column,
-		UserMessage:   DBErrorMap[err.Constraint],
-		Code:          400,
+		Tag:         err.Column,
+		UserMessage: DBErrorMap[err.Constraint],
+		Code:        400,
 	}
 }

@@ -27,9 +27,7 @@ func (r OrganizationRepositoryPg) Create(organization *model.Organization) *appe
 	_, err := r.db.Exec("INSERT into organizations (id, name) VALUES ($1, $2)", organization.Id, organization.Name)
 
 	if err != nil {
-		return &apperror.AppError{
-			OriginalError: err,
-		}
+		return &apperror.ServerError
 	}
 
 	return nil

@@ -12,28 +12,25 @@ func ParseAndValidate(r *http.Request, data interface{}) *apperror.AppError {
 
 	if err != nil {
 		return &apperror.AppError{
-			OriginalError: err,
-			Tag:           "global",
-			UserMessage:   "Error while parsing",
-			Code:          400,
+			Tag:         "global",
+			UserMessage: "Error while parsing",
+			Code:        400,
 		}
 	}
 
 	if err := r.Body.Close(); err != nil {
 		return &apperror.AppError{
-			OriginalError: err,
-			Tag:           "global",
-			UserMessage:   "Something went wrong",
-			Code:          500,
+			Tag:         "global",
+			UserMessage: "Something went wrong",
+			Code:        500,
 		}
 	}
 
 	if err := json.Unmarshal(body, data); err != nil {
 		return &apperror.AppError{
-			OriginalError: err,
-			Tag:           "global",
-			UserMessage:   "Error while parsing",
-			Code:          400,
+			Tag:         "global",
+			UserMessage: "Error while parsing",
+			Code:        400,
 		}
 	}
 

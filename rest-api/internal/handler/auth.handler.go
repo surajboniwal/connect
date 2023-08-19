@@ -33,23 +33,14 @@ func (h AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	user, err := h.userRepo.GetByEmail(params.Email)
 
 	if err != nil {
-		apphttp.WriteJSONResponse(w, &apperror.AppError{
-			Tag:         "global",
-			UserMessage: "Unauthorized",
-			Code:        401,
-		})
+		apphttp.WriteJSONResponse(w, &apperror.UnauthorizedError)
 		return
 	}
 
 	e := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(params.Password))
 
 	if e != nil {
-		apphttp.WriteJSONResponse(w, &apperror.AppError{
-			OriginalError: e,
-			Tag:           "global",
-			UserMessage:   "Unauthorized",
-			Code:          401,
-		})
+		apphttp.WriteJSONResponse(w, &apperror.UnauthorizedError)
 		return
 	}
 
@@ -87,5 +78,5 @@ func (h AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	apphttp.WriteJSONResponse(w, "Registration successful")
+	apphttp.WriteJSONResponse(w, "Registration successful", 201)
 }

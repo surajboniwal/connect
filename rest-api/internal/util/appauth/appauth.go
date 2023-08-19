@@ -21,7 +21,7 @@ func Init(key string) {
 
 func Generate(userid int64) (string, *apperror.AppError) {
 	now := time.Now()
-	exp := now.Add(24 * time.Hour)
+	exp := now.Add(time.Minute * 30)
 	nbt := now
 	t := paseto.NewV2()
 
@@ -49,6 +49,10 @@ func Validate(token string) (int64, *apperror.AppError) {
 
 	if err != nil {
 		return 0, apperror.Parse(err)
+	}
+
+	if newJsonToken.Expiration.Before(time.Now()) {
+		return 0, &apperror.UnauthorizedError
 	}
 
 	i, err := strconv.ParseInt(newJsonToken.Subject, 10, 64)
@@ -80,10 +84,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		authHeader := r.Header.Get("Authorization")
 
 		if !strings.HasPrefix(authHeader, "Bearer ") {
-			apphttp.WriteJSONResponse(w, &apperror.AppError{
-				UserMessage: "Unauthorized",
-				Code:        http.StatusUnauthorized,
-			})
+			apphttp.WriteJSONResponse(w, &apperror.UnauthorizedError)
 			return
 		}
 
@@ -92,10 +93,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		userId, err := Validate(token)
 
 		if err != nil {
-			apphttp.WriteJSONResponse(w, &apperror.AppError{
-				UserMessage: "Unauthorized",
-				Code:        http.StatusUnauthorized,
-			})
+			apphttp.WriteJSONResponse(w, &apperror.UnauthorizedError)
 			return
 		}
 
